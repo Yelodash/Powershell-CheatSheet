@@ -1,1 +1,26 @@
 # Powershell-CheatSheet
+
+```
+**Used for CTF
+```
+File Hunting in web directories (or user but not as administrator):
+
+```
+$last=""; Get-ChildItem -Path (Get-Location) -Recurse -Force -File -ErrorAction SilentlyContinue | Where-Object { $_.Attributes -match "Hidden" -or ($_.FullName -notmatch '\\(examples|vendor|bin|src|node_modules|test|Crpto|Local|USOPrivate|LocalLow|Vmware|tests|UEV|MF|IdentityCRL|docs|documentation|tmp|templogs|USOshared|libraries|themes|properties|plugins|Windows\sDefender|Windows\sSecurity|Health|NetFramework|DiagnosticLogCSP|device|storage|Package\sCache|Start\sMenu|classes|php|pear|web-inf|host-manager|doc\.svn|\.hg)\\' -and $_.Name -notmatch '^(Thumbs\.db|desktop\.ini|\.DS_Store)$' -and $_.Extension -notmatch '(\.log|\.tmp|\.bak|\.dll|\.pm|\.pod|\.twig|\.java|\.class|\.properties|\.html|\.jsp|\.gif|\.png|\.svg|\.woff|\.jar|\.xsd|\.mo|\.js|\.xsl|\.css|\.packlist|\.pl|\.ico|\.scss|\.h)$') } | Sort-Object DirectoryName | ForEach-Object { if ($last -ne $_.DirectoryName) { "`n===================== [ $($_.DirectoryName) ] ====================="; $last=$_.DirectoryName }; " - $($_.Name) [$([math]::Round($_.Length/1KB,2)) KB]" }
+```
+
+File Hunting in User directory
+
+```Powershell
+Get-ChildItem -Path . -Recurse -Force -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\(AppData\\Local|AppData\\LocalLow|Local Settings|Start Menu|Application Data)(\\|$)' }
+```
+
+History Hunting
+
+```
+(Get-PSReadlineOption).HistorySavePath
+```
+
+```
+Get-ChildItem -Path 'C:\Users' -Recurse -Force -Filter "ConsoleHost_history.txt" -ErrorAction SilentlyContinue | ForEach-Object { "`n==== $($_.FullName) ===="; Get-Content $_.FullName -ErrorAction SilentlyContinue }
+```
