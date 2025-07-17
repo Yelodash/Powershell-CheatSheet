@@ -1,8 +1,6 @@
 # Powershell-CheatSheet
 
-```
-**Used for CTF
-```
+
 File Hunting in web directories (or user but not as administrator):
 
 ```Powershell
